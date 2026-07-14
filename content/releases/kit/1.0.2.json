@@ -1,0 +1,24 @@
+{
+  "product": "kit",
+  "version": "1.0.2",
+  "title": "Phoxia DevKit 1.0.2",
+  "date": "2026-07-14",
+  "summary": "Npm release scripts, manifest integrity checks, and a polished Kit landing experience with bilingual legal pages.",
+  "changes": [
+    "Added npm scripts for version bump, manifest regeneration and release workflow.",
+    "Simplified the Kit navigation and replaced select menus with accessible locale and theme controls.",
+    "Added purposeful terminal and section motion with reduced-motion support.",
+    "Expanded the site footer with documentation, support, security and project resources.",
+    "Matched the compact Phoxia language and theme controls, integrated Lux into the problem heading and corrected the footer product message.",
+    "Consolidated the Kit landing into an eight-section product pipeline.",
+    "Added an accessible responsive workflow timeline and reduced-motion fallback.",
+    "Focused the profiles section on official presets and local workflows.",
+    "Color-coded workflow progress from amber to violet.",
+    "Added semantic icons and consistent title spacing across pipeline, repository, verification, setup-mode and profile cards.",
+    "Replaced the compact footer with a rich local sitemap.",
+    "Added effective bilingual Kit privacy and terms pages."
+  ],
+  "docsUrl": "https://docs.phoxia.org/kit",
+  "sourceUrl": "https://github.com/phoxia/phoxia-devkit",
+  "breaking": false
+}
