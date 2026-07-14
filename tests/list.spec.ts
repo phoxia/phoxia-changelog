@@ -40,3 +40,13 @@ test("theme supports system, light and dark and persists the choice", async ({ p
   await page.getByRole("button", { name: "Dark" }).click();
   await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
 });
+
+test("stored theme is applied by a head script before the app mounts", async ({ page }) => {
+  await page.addInitScript(() => localStorage.setItem("phoxia-changelog-theme", "light"));
+  await page.goto("/");
+
+  expect(await page.locator("head script").evaluateAll((scripts) =>
+    scripts.some((script) => script.textContent?.includes("phoxia-changelog-theme"))
+  )).toBe(true);
+  await expect(page.locator("html")).toHaveAttribute("data-theme", "light");
+});

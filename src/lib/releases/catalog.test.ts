@@ -65,3 +65,19 @@ test("describes an empty catalog without indexing a missing release", () => {
 test("derives product labels from release titles", () => {
   assert.equal(releaseState(releases).products[0]?.name, "Phoxia DevKit");
 });
+
+test("keeps only the latest release for each product", () => {
+  const older = { ...releases[0]!, version: "1.9.0", date: "2026-07-13", title: "Phoxia DevKit 1.9.0" };
+  const newer = { ...releases[0]!, version: "2.0.0", date: "2026-07-13", title: "Phoxia DevKit 2.0.0" };
+
+  assert.deepEqual(releaseState([older, newer]).products.map(({ product, version }) => ({ product, version })), [
+    { product: "kit", version: "2.0.0" }
+  ]);
+});
+
+test("prefers release date before semantic version", () => {
+  const newerDate = { ...releases[0]!, version: "1.0.0", date: "2026-07-13" };
+  const olderDate = { ...releases[0]!, version: "9.0.0", date: "2026-07-12" };
+
+  assert.equal(releaseState([newerDate, olderDate]).products[0]?.version, "1.0.0");
+});

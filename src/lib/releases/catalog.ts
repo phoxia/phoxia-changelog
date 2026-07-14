@@ -46,8 +46,37 @@ export function validateRelease(value: unknown): Release {
 
 export const releases: readonly Release[] = [validateRelease(release)];
 
+function compareVersions(a: string, b: string): number {
+  const [aCore, aPre] = a.split("+", 1)[0]!.split("-", 2);
+  const [bCore, bPre] = b.split("+", 1)[0]!.split("-", 2);
+  for (let index = 0; index < 3; index++) {
+    const difference = Number(aCore!.split(".")[index]) - Number(bCore!.split(".")[index]);
+    if (difference) return difference;
+  }
+  if (aPre === undefined || bPre === undefined) return aPre === bPre ? a.localeCompare(b) : aPre === undefined ? 1 : -1;
+  const aParts = aPre.split(".");
+  const bParts = bPre.split(".");
+  for (let index = 0; index < Math.max(aParts.length, bParts.length); index++) {
+    const left = aParts[index];
+    const right = bParts[index];
+    if (left === undefined || right === undefined) return left === right ? a.localeCompare(b) : left === undefined ? -1 : 1;
+    if (left === right) continue;
+    const leftNumber = /^\d+$/.test(left);
+    const rightNumber = /^\d+$/.test(right);
+    if (leftNumber && rightNumber) return Number(left) - Number(right);
+    if (leftNumber !== rightNumber) return leftNumber ? -1 : 1;
+    return left.localeCompare(right);
+  }
+  return a.localeCompare(b);
+}
+
 export function releaseState(items: readonly Release[]) {
-  const products = items.map((item) => ({
+  const latest = new Map<string, Release>();
+  for (const item of items) {
+    const current = latest.get(item.product);
+    if (!current || item.date > current.date || (item.date === current.date && compareVersions(item.version, current.version) > 0)) latest.set(item.product, item);
+  }
+  const products = [...latest.values()].sort((a, b) => a.product.localeCompare(b.product)).map((item) => ({
     ...item,
     name: item.title.replace(new RegExp(`\\s+${item.version.replaceAll(".", "\\.")}$`), "")
   }));
