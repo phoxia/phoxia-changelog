@@ -7,7 +7,7 @@
     "build": "vite build",
     "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
     "preview": "vite preview",
-    "test": "node --test src/lib/releases/catalog.test.ts"
+    "test": "node --test src/lib/releases/catalog.test.ts scripts/check-version-record.test.mjs"
   },
   "dependencies": {
     "@phoxia/lux": "0.1.0",
