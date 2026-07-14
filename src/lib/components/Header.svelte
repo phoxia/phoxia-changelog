@@ -11,7 +11,7 @@
 
   function applyTheme(value: Theme) {
     theme = value;
-    localStorage.setItem("phoxia-changelog-theme", value);
+    try { localStorage.setItem("phoxia-changelog-theme", value); } catch {}
     document.documentElement.dataset.theme = value === "system"
       ? (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light")
       : value;
@@ -19,7 +19,8 @@
   }
 
   onMount(() => {
-    const stored = localStorage.getItem("phoxia-changelog-theme");
+    let stored: string | null = null;
+    try { stored = localStorage.getItem("phoxia-changelog-theme"); } catch {}
     applyTheme(stored === "light" || stored === "dark" ? stored : "system");
     const media = matchMedia("(prefers-color-scheme: dark)");
     const update = () => theme === "system" && applyTheme("system");

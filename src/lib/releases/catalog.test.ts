@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { getRelease, releases, releaseState, validateRelease } from "./catalog.ts";
+import { getRelease, releaseKey, releases, releaseState, validateRelease } from "./catalog.ts";
 
 test("rejects a release without evidence", () => {
   assert.throws(() => validateRelease({ product: "kit", version: "1.0.0" }), /title/);
@@ -80,4 +80,11 @@ test("prefers release date before semantic version", () => {
   const olderDate = { ...releases[0]!, version: "9.0.0", date: "2026-07-12" };
 
   assert.equal(releaseState([newerDate, olderDate]).products[0]?.version, "1.0.0");
+});
+
+test("keys equal versions from different products separately", () => {
+  const kit = releases[0]!;
+  const other = { ...kit, product: "other" };
+
+  assert.deepEqual([releaseKey(kit), releaseKey(other)], ["kit:1.0.0", "other:1.0.0"]);
 });

@@ -45,6 +45,7 @@ export function validateRelease(value: unknown): Release {
 }
 
 export const releases: readonly Release[] = [validateRelease(release)];
+export const releaseKey = (release: Release) => `${release.product}:${release.version}`;
 
 function compareVersions(a: string, b: string): number {
   const [aCore, aPre] = a.split("+", 1)[0]!.split("-", 2);

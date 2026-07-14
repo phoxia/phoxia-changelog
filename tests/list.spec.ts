@@ -50,3 +50,16 @@ test("stored theme is applied by a head script before the app mounts", async ({ 
   )).toBe(true);
   await expect(page.locator("html")).toHaveAttribute("data-theme", "light");
 });
+
+test("theme still works when local storage is unavailable", async ({ page }) => {
+  await page.addInitScript(() => {
+    Storage.prototype.getItem = Storage.prototype.setItem = () => {
+      throw new DOMException("Blocked", "SecurityError");
+    };
+  });
+  await page.goto("/");
+  await page.getByRole("button", { name: "Theme" }).click();
+  await page.getByRole("button", { name: "Light" }).click();
+
+  await expect(page.locator("html")).toHaveAttribute("data-theme", "light");
+});

@@ -1,7 +1,7 @@
 <script lang="ts">
   import luxNeutral from "@phoxia/lux/assets/lux/lux-neutral.svg?url";
   import ReleaseCard from "$lib/components/ReleaseCard.svelte";
-  import { releases, releaseState } from "$lib/releases/catalog";
+  import { releaseKey, releases, releaseState } from "$lib/releases/catalog";
   const state = releaseState(releases);
 </script>
 
@@ -21,6 +21,6 @@
     <div class="section-label mono">Products with public releases</div>
     {#each state.products as product (product.product)}<div class="product"><div class="product-head"><span class="product-name">{product.name}</span></div><div class="product-meta"><span class="version mono">v{product.version}</span><time class="date" datetime={product.date}>{product.date}</time><a class="product-link" href={`/${product.product}`}>All releases →</a></div></div>{/each}
   </section>
-  <section class="shell timeline"><div class="rail">{#each releases as release (release.version)}<ReleaseCard {release} />{/each}<p class="archive mono">Only products with public releases are shown.</p></div></section>
+  <section class="shell timeline"><div class="rail">{#each releases as release (releaseKey(release))}<ReleaseCard {release} />{/each}<p class="archive mono">Only products with public releases are shown.</p></div></section>
   {/if}
 </main>
