@@ -15,8 +15,26 @@ test("built pages contain deployable Lux and metadata assets", async ({ page }) 
   await page.goto("/");
   const urls = await page.locator("img, link[rel='icon'], link[rel='manifest'], link[rel='apple-touch-icon']").evaluateAll((nodes) => nodes.map((node) => node.getAttribute("src") ?? node.getAttribute("href")));
   expect(urls).not.toContainEqual(expect.stringMatching(/^file:/));
+  await expect(page.locator("link[rel='manifest']")).toHaveCount(1);
   await expect(page.locator("img").first()).toHaveJSProperty("complete", true);
   expect(await page.locator("img").first().evaluate((image: HTMLImageElement) => image.naturalWidth)).toBeGreaterThan(0);
+});
+
+test("localized list shells are prerendered", async ({ page }) => {
+  for (const path of ["/pt-BR", "/pt-BR/kit"]) {
+    await page.goto(path);
+    await expect(page.locator("html")).toHaveAttribute("lang", "pt-BR");
+    await expect(page.getByRole("status")).toContainText("inglês");
+  }
+});
+
+test("header controls meet the minimum pointer target size", async ({ page }) => {
+  await page.goto("/");
+  for (const target of await page.locator("header nav a, header nav button").all()) {
+    const box = await target.boundingBox();
+    expect(box?.height).toBeGreaterThanOrEqual(44);
+    expect(box?.width).toBeGreaterThanOrEqual(44);
+  }
 });
 
 test("single-release catalog has no inert search or invented metadata", async ({ page }) => {

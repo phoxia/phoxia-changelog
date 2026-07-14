@@ -50,7 +50,7 @@
   .brand { min-width: 0; gap: 10px; color: var(--text); font-size: 15px; text-decoration: none; }
   .host { padding: 1px 6px; overflow: hidden; border: 1px solid var(--border); border-radius: 5px; color: var(--muted); font-size: 11px; text-overflow: ellipsis; white-space: nowrap; }
   nav { gap: 8px; }
-  nav a, button { min-height: 34px; padding: 6px 11px; border: 1px solid var(--border); border-radius: 9px; color: var(--text); background: transparent; font-size: 13px; text-decoration: none; cursor: pointer; }
+  nav a, button { min-width: 44px; min-height: 44px; padding: 6px 11px; justify-content: center; border: 1px solid var(--border); border-radius: 9px; color: var(--text); background: transparent; font-size: 13px; text-decoration: none; cursor: pointer; }
   nav a:hover, button:hover { border-color: var(--border-strong); }
   .menu { position: relative; }
   .themes { position: absolute; top: calc(100% + 8px); right: 0; display: grid; min-width: 130px; padding: 6px; border: 1px solid var(--border); border-radius: 10px; background: var(--surface); box-shadow: 0 12px 30px rgba(0,0,0,.3); }

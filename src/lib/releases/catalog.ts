@@ -44,7 +44,6 @@ export function validateRelease(value: unknown): Release {
   return record as unknown as Release;
 }
 
-export const releases: readonly Release[] = [validateRelease(release)];
 export const releaseKey = (release: Release) => `${release.product}:${release.version}`;
 
 function compareVersions(a: string, b: string): number {
@@ -70,6 +69,12 @@ function compareVersions(a: string, b: string): number {
   }
   return a.localeCompare(b);
 }
+
+export function sortReleases(items: readonly Release[]): Release[] {
+  return [...items].sort((a, b) => b.date.localeCompare(a.date) || compareVersions(b.version, a.version) || releaseKey(a).localeCompare(releaseKey(b)));
+}
+
+export const releases: readonly Release[] = sortReleases([validateRelease(release)]);
 
 export function releaseState(items: readonly Release[]) {
   const latest = new Map<string, Release>();
