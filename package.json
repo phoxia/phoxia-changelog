@@ -5,6 +5,7 @@
   "license": "AGPL-3.0-only",
   "type": "module",
   "scripts": {
+    "dev": "vite dev",
     "build": "vite build",
     "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
     "preview": "vite preview",

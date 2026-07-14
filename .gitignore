@@ -4,3 +4,4 @@ build/
 test-results/
 .phoxia/*.local.*
 .claude/settings.local.json
+.playwright-mcp/
