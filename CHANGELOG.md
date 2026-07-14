@@ -3,10 +3,8 @@
 ## Unreleased
 
 - Added the Phoxia DevKit 1.0.1 release record.
-
-## Unreleased
-
 - Added managed DevKit context and Phoxia audit records.
+- Standardized the repository license as AGPL-3.0-only.
 
 ## 1.0.0
 
