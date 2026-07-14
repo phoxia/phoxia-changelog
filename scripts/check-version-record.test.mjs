@@ -9,7 +9,6 @@ import { hasReleaseRecord } from "./check-version-record.mjs";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const script = resolve(root, "scripts/check-version-record.mjs");
-const devkitManifest = resolve(root, "../phoxia-kits/devkit/MANIFEST.json");
 
 test("requires a record for the manifest version", () => {
   assert.equal(hasReleaseRecord({ version: "1.0.0" }, "kit"), true);
@@ -40,10 +39,12 @@ test("uses the canonical release validation contract", () => {
   ]) assert.equal(hasReleaseRecord({ version: "1.0.0" }, "kit", record), false);
 });
 
-test("CLI succeeds for the real DevKit manifest from another cwd", () => {
+test("CLI succeeds with a standalone manifest from another cwd", () => {
   const cwd = mkdtempSync(resolve(tmpdir(), "changelog-gate-"));
+  const manifest = resolve(cwd, "manifest.json");
+  writeFileSync(manifest, JSON.stringify({ version: "1.0.0" }));
   try {
-    const result = spawnSync(process.execPath, [script, devkitManifest, "kit"], { cwd, encoding: "utf8" });
+    const result = spawnSync(process.execPath, [script, manifest, "kit"], { cwd, encoding: "utf8" });
     assert.equal(result.status, 0, result.stderr);
     assert.equal(result.stderr, "");
   } finally { rmSync(cwd, { recursive: true, force: true }); }
@@ -55,10 +56,28 @@ test("CLI reports an absent product and release exactly", () => {
   writeFileSync(missingManifest, JSON.stringify({ version: "9.9.9" }));
   try {
     for (const [manifest, product, message] of [
-      [devkitManifest, "missing", "Missing changelog record for missing 1.0.0\n"],
+      [resolve(cwd, "manifest-1.0.0.json"), "missing", "Missing changelog record for missing 1.0.0\n"],
       [missingManifest, "kit", "Missing changelog record for kit 9.9.9\n"]
     ]) {
+      if (product === "missing") writeFileSync(manifest, JSON.stringify({ version: "1.0.0" }));
       const result = spawnSync(process.execPath, [script, manifest, product], { cwd, encoding: "utf8" });
+      assert.equal(result.status, 1);
+      assert.equal(result.stderr, message);
+    }
+  } finally { rmSync(cwd, { recursive: true, force: true }); }
+});
+
+test("CLI distinguishes unreadable and malformed manifests", () => {
+  const cwd = mkdtempSync(resolve(tmpdir(), "changelog-gate-"));
+  const absent = resolve(cwd, "absent.json");
+  const malformed = resolve(cwd, "malformed.json");
+  writeFileSync(malformed, "{");
+  try {
+    for (const [manifest, message] of [
+      [absent, `Unable to read manifest ${absent}\n`],
+      [malformed, `Invalid manifest ${malformed}\n`]
+    ]) {
+      const result = spawnSync(process.execPath, [script, manifest, "kit"], { cwd, encoding: "utf8" });
       assert.equal(result.status, 1);
       assert.equal(result.stderr, message);
     }

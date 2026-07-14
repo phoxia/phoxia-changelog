@@ -18,9 +18,18 @@ export function hasReleaseRecord(manifest, product, candidate) {
 
 if (process.argv[1] === fileURLToPath(import.meta.url)) {
   const [, , manifestPath, product] = process.argv;
+  const path = resolve(manifestPath ?? "");
+  let source;
+  try { source = readFileSync(path, "utf8"); } catch {
+    console.error(`Unable to read manifest ${path}`);
+    process.exitCode = 1;
+  }
   let manifest;
-  try { manifest = JSON.parse(readFileSync(resolve(manifestPath), "utf8")); } catch {}
-  if (!hasReleaseRecord(manifest, product)) {
+  if (source !== undefined) try { manifest = JSON.parse(source); } catch {
+    console.error(`Invalid manifest ${path}`);
+    process.exitCode = 1;
+  }
+  if (manifest !== undefined && !hasReleaseRecord(manifest, product)) {
     console.error(`Missing changelog record for ${product ?? "product"} ${manifest?.version ?? "version"}`);
     process.exitCode = 1;
   }
