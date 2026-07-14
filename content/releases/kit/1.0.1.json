@@ -1,0 +1,15 @@
+{
+  "product": "kit",
+  "version": "1.0.1",
+  "title": "Phoxia DevKit 1.0.1",
+  "date": "2026-07-14",
+  "summary": "Documentation governance is now part of every managed Phoxia project.",
+  "changes": [
+    "Added managed documentation triggers for public version, user-facing behavior and contract changes.",
+    "Added explicit Feature Record, ADR and RFC classification guidance to initialized projects.",
+    "Added regression coverage for the managed documentation policy."
+  ],
+  "docsUrl": "https://docs.phoxia.org/kit",
+  "sourceUrl": "https://github.com/phoxia/phoxia-devkit",
+  "breaking": false
+}

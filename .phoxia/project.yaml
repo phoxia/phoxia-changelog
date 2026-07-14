@@ -1,0 +1,23 @@
+apiVersion: kit.phoxia.org/v1
+kind: ProjectContext
+metadata:
+  name: "phoxia-changelog"
+  description: "Canonical public release history for the Phoxia ecosystem."
+  profile: "phoxia"
+  configuredAt: "2026-07-14T13:43:32.145614+00:00"
+targets: ["claude", "codex"]
+layers: []
+ownership:
+  owner: "Lucas Christian"
+  company: "Phoxia"
+governance:
+  technicalMaintainer: "Lucas Christian"
+  pullRequestApprover: "Lucas Christian"
+  commercialAuthority: "Lucas Christian"
+repository:
+  visibility: "public"
+documentation:
+  visibility: "public"
+distribution:
+  model: "open-source"
+  legalReviewRequired: true
