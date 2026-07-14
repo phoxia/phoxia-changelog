@@ -84,6 +84,13 @@ test("discovers nested release modules without a manual list", () => {
   assert.deepEqual(releases.map(({ version }) => version), ["1.0.0", "0.9.0"]);
 });
 
+test("rejects duplicate product versions with a clear key", () => {
+  assert.throws(() => catalogFromModules({
+    "first.json": { default: fixture },
+    "duplicate.json": { default: { ...fixture, title: "Duplicate" } }
+  }), /duplicate release kit:1\.0\.0/);
+});
+
 test("describes an empty catalog without indexing a missing release", () => {
   assert.deepEqual(releaseState([]), { empty: true, products: [] });
 });

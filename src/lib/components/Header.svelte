@@ -3,11 +3,13 @@
   import Monitor from "lucide-svelte/icons/monitor";
   import Moon from "lucide-svelte/icons/moon";
   import Sun from "lucide-svelte/icons/sun";
+  import { page } from "$app/state";
   import { onMount } from "svelte";
 
   type Theme = "system" | "light" | "dark";
   let theme = $state<Theme>("system");
   let themeOpen = $state(false);
+  let home = $derived(page.url.pathname.startsWith("/pt-BR") ? "/pt-BR" : "/");
 
   function applyTheme(value: Theme) {
     theme = value;
@@ -31,7 +33,7 @@
 
 <header>
   <div class="bar">
-    <a class="brand" href="/" aria-label="Phoxia Changelog home">
+    <a class="brand" href={home} aria-label="Phoxia Changelog home">
       <img src={luxHappy} alt="" width="24" height="24" aria-hidden="true" />
       <strong>Phoxia Changelog</strong>
       <span class="host mono">changelog.phoxia.org</span>

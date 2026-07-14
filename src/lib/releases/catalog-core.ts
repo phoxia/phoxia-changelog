@@ -65,7 +65,14 @@ export function sortReleases(items: readonly Release[]): Release[] {
 }
 
 export function catalogFromModules(modules: Record<string, { default: unknown }>): Release[] {
-  return sortReleases(Object.values(modules).map(({ default: release }) => validateRelease(release)));
+  const releases = Object.values(modules).map(({ default: release }) => validateRelease(release));
+  const keys = new Set<string>();
+  for (const release of releases) {
+    const key = releaseKey(release);
+    if (keys.has(key)) throw new Error(`duplicate release ${key}`);
+    keys.add(key);
+  }
+  return sortReleases(releases);
 }
 
 export function releaseState(items: readonly Release[]) {

@@ -7,7 +7,7 @@
     "build": "vite build",
     "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
     "preview": "vite preview",
-    "test": "node --test src/lib/releases/catalog.test.ts scripts/check-version-record.test.mjs",
+    "test": "node --test src/lib/releases/catalog.test.ts scripts/check-version-record.test.mjs scripts/validate-links.test.mjs",
     "test:e2e": "playwright test",
     "validate:links": "node scripts/validate-links.mjs",
     "validate:locales": "node scripts/validate-locales.mjs",

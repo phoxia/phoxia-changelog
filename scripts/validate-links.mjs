@@ -8,7 +8,7 @@ for (const file of files) {
   for (const [, href] of html.matchAll(/href="([^"]+)"/g)) {
     if (!href.startsWith("/") || href.startsWith("//")) continue;
     const path = href.split(/[?#]/)[0];
-    if (path.includes(".")) continue;
+    if (existsSync(`build${path}`)) continue;
     const target = path === "/" ? "build/index.html" : `build${path}.html`;
     if (!existsSync(target)) throw new Error(`${file}: broken internal link ${href}`);
   }

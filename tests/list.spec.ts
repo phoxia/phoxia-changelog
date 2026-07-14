@@ -40,6 +40,11 @@ test("localized release cards keep the pt-BR prefix", async ({ page }) => {
   await expect(page.getByRole("link", { name: /1.0.0/ }).first()).toHaveAttribute("href", "/pt-BR/kit/releases/1.0.0");
 });
 
+test("header brand keeps the current locale", async ({ page }) => {
+  await page.goto("/pt-BR/kit");
+  await expect(page.getByRole("link", { name: "Phoxia Changelog home" })).toHaveAttribute("href", "/pt-BR");
+});
+
 test("header controls meet the minimum pointer target size", async ({ page }) => {
   await page.goto("/");
   for (const target of await page.locator("header nav a, header nav button").all()) {
