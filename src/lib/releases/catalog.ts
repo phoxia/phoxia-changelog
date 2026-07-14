@@ -3,6 +3,17 @@ import type { Release } from "./types.ts";
 
 const required = ["product", "version", "title", "date", "summary", "changes", "docsUrl", "sourceUrl", "breaking"] as const;
 const allowed = new Set([...required, "compatibility", "migration", "rfcUrl"]);
+const semver = /^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[A-Za-z-][0-9A-Za-z-]*)(?:\.(?:0|[1-9]\d*|\d*[A-Za-z-][0-9A-Za-z-]*))*))?(?:\+([0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*))?$/;
+
+function isHttpsUrl(value: unknown): value is string {
+  if (typeof value !== "string") return false;
+  try {
+    const url = new URL(value);
+    return url.protocol === "https:" && url.hostname.length > 0;
+  } catch {
+    return false;
+  }
+}
 
 export function validateRelease(value: unknown): Release {
   if (!value || typeof value !== "object" || Array.isArray(value)) throw new Error("release must be an object");
@@ -18,13 +29,13 @@ export function validateRelease(value: unknown): Release {
   for (const key of ["product", "title", "summary"] as const) {
     if (typeof record[key] !== "string" || record[key].length === 0) throw new Error(`invalid ${key}`);
   }
-  if (typeof record.version !== "string" || !/^\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?$/.test(record.version)) throw new Error("invalid version");
+  if (typeof record.version !== "string" || !semver.test(record.version)) throw new Error("invalid version");
   if (typeof record.date !== "string" || !/^\d{4}-\d{2}-\d{2}$/.test(record.date) || new Date(`${record.date}T00:00:00Z`).toISOString().slice(0, 10) !== record.date) throw new Error("invalid date");
   if (!Array.isArray(record.changes) || !record.changes.every((change) => typeof change === "string" && change.length > 0)) throw new Error("invalid changes");
   if (typeof record.breaking !== "boolean") throw new Error("invalid breaking");
 
   for (const key of ["docsUrl", "sourceUrl", "rfcUrl"] as const) {
-    if (record[key] !== undefined && (typeof record[key] !== "string" || !record[key].startsWith("https://"))) throw new Error(`unexpected ${key}`);
+    if (record[key] !== undefined && !isHttpsUrl(record[key])) throw new Error(`unexpected ${key}`);
   }
   for (const key of ["compatibility", "migration"] as const) {
     if (record[key] !== undefined && typeof record[key] !== "string") throw new Error(`invalid ${key}`);
