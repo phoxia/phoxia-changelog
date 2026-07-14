@@ -3,4 +3,4 @@
   let { data } = $props();
 </script>
 
-<ReleaseDetail release={data.release} fallback />
+<ReleaseDetail release={data.release} fallback locale="/pt-BR" />

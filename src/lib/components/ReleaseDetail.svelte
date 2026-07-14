@@ -1,7 +1,7 @@
 <script lang="ts">
   import type { Release } from "$lib/releases/types";
 
-  let { release, fallback = false }: { release: Release; fallback?: boolean } = $props();
+  let { release, fallback = false, locale = "" }: { release: Release; fallback?: boolean; locale?: string } = $props();
 </script>
 
 <svelte:head>
@@ -12,7 +12,7 @@
 <main id="main" class="shell detail">
   {#if fallback}<p class="notice" role="status">This release is not available in Brazilian Portuguese yet. Showing the English version.</p>{/if}
   <nav class="crumbs mono" aria-label="Breadcrumb">
-    <a href="/">All products</a><span>/</span><a href={`/${release.product}`}>Kit</a><span>/</span><span>v{release.version}</span>
+    <a href={locale || "/"}>All products</a><span>/</span><a href={`${locale}/${release.product}`}>Kit</a><span>/</span><span>v{release.version}</span>
   </nav>
   <header class="release-head">
     <div><h1>{release.title}</h1><p>{release.summary}</p></div>

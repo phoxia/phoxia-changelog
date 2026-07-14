@@ -18,6 +18,13 @@ test("built pages contain deployable Lux and metadata assets", async ({ page }) 
   await expect(page.locator("link[rel='manifest']")).toHaveCount(1);
   await expect(page.locator("img").first()).toHaveJSProperty("complete", true);
   expect(await page.locator("img").first().evaluate((image: HTMLImageElement) => image.naturalWidth)).toBeGreaterThan(0);
+
+  const manifestUrl = await page.locator("link[rel='manifest']").getAttribute("href");
+  expect(manifestUrl).not.toMatch(/^data:/);
+  const response = await page.request.get(manifestUrl!);
+  expect(response.ok()).toBe(true);
+  const webManifest = await response.json();
+  for (const icon of webManifest.icons) expect((await page.request.get(new URL(icon.src, response.url()).toString())).ok()).toBe(true);
 });
 
 test("localized list shells are prerendered", async ({ page }) => {
@@ -26,6 +33,11 @@ test("localized list shells are prerendered", async ({ page }) => {
     await expect(page.locator("html")).toHaveAttribute("lang", "pt-BR");
     await expect(page.getByRole("status")).toContainText("inglês");
   }
+});
+
+test("localized release cards keep the pt-BR prefix", async ({ page }) => {
+  await page.goto("/pt-BR/kit");
+  await expect(page.getByRole("link", { name: /1.0.0/ }).first()).toHaveAttribute("href", "/pt-BR/kit/releases/1.0.0");
 });
 
 test("header controls meet the minimum pointer target size", async ({ page }) => {

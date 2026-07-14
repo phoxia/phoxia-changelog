@@ -15,4 +15,6 @@ test("pt-BR path keeps the requested release and explains the English fallback",
   await page.goto("/pt-BR/kit/releases/1.0.0");
   await expect(page.getByRole("heading", { level: 1 })).toContainText("1.0.0");
   await expect(page.getByRole("status")).toContainText("not available in Brazilian Portuguese");
+  await expect(page.getByRole("navigation", { name: "Breadcrumb" }).getByRole("link", { name: "All products" })).toHaveAttribute("href", "/pt-BR");
+  await expect(page.getByRole("navigation", { name: "Breadcrumb" }).getByRole("link", { name: "Kit" })).toHaveAttribute("href", "/pt-BR/kit");
 });

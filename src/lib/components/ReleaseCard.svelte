@@ -1,13 +1,14 @@
 <script lang="ts">
   import type { Release } from "$lib/releases/types";
-  let { release }: { release: Release } = $props();
+  let { release, locale = "" }: { release: Release; locale?: string } = $props();
+  const detailUrl = $derived(`${locale}/${release.product}/releases/${release.version}`);
 </script>
 
 <article>
   <span class="dot"></span>
   <div class="card">
     <div class="heading">
-      <a class="title" href={`/${release.product}/releases/${release.version}`}>{release.title}</a>
+      <a class="title" href={detailUrl}>{release.title}</a>
       <time class="mono" datetime={release.date}>{release.date}</time>
     </div>
     <p>{release.summary}</p>
@@ -17,7 +18,7 @@
       {#if release.compatibility}<div><dt class="mono">COMPATIBILITY</dt><dd>{release.compatibility}</dd></div>{/if}
     </dl>
     <div class="links">
-      <a class="detail" href={`/${release.product}/releases/${release.version}`}>Release detail →</a>
+      <a class="detail" href={detailUrl}>Release detail →</a>
       <a href={release.docsUrl}>Docs</a>
       <a href={release.sourceUrl}>Source</a>
     </div>

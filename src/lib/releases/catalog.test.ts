@@ -1,6 +1,16 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { getRelease, releaseKey, releases, releaseState, sortReleases, validateRelease } from "./catalog.ts";
+import { catalogFromModules, releaseKey, releaseState, sortReleases, validateRelease } from "./catalog-core.ts";
+
+const fixture = {
+  product: "kit", version: "1.0.0", title: "Phoxia DevKit 1.0.0", date: "2026-07-13",
+  summary: "Initial public release", changes: ["Added release"], docsUrl: "https://docs.phoxia.org/kit",
+  sourceUrl: "https://github.com/phoxia/phoxia-devkit", breaking: false
+};
+const releases = catalogFromModules({
+  "../../../content/releases/kit/1.0.0.json": { default: fixture },
+  "../../../content/releases/kit/archive/0.9.0.json": { default: { ...fixture, version: "0.9.0", title: "Phoxia DevKit 0.9.0", date: "2026-07-12" } }
+});
 
 test("rejects a release without evidence", () => {
   assert.throws(() => validateRelease({ product: "kit", version: "1.0.0" }), /title/);
@@ -70,10 +80,8 @@ test("rejects blank or untrimmed release strings", () => {
   ]) assert.throws(() => validateRelease(record));
 });
 
-test("exposes exactly the verified Kit release", () => {
-  assert.equal(releases.length, 1);
-  assert.equal(getRelease("kit", "1.0.0")?.title, "Phoxia DevKit 1.0.0");
-  assert.equal(getRelease("kit", "9.9.9"), undefined);
+test("discovers nested release modules without a manual list", () => {
+  assert.deepEqual(releases.map(({ version }) => version), ["1.0.0", "0.9.0"]);
 });
 
 test("describes an empty catalog without indexing a missing release", () => {
