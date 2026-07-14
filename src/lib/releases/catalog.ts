@@ -31,7 +31,7 @@ export function validateRelease(value: unknown): Release {
   }
   if (typeof record.version !== "string" || !semver.test(record.version)) throw new Error("invalid version");
   if (typeof record.date !== "string" || !/^\d{4}-\d{2}-\d{2}$/.test(record.date) || new Date(`${record.date}T00:00:00Z`).toISOString().slice(0, 10) !== record.date) throw new Error("invalid date");
-  if (!Array.isArray(record.changes) || !record.changes.every((change) => typeof change === "string" && change.length > 0)) throw new Error("invalid changes");
+  if (!Array.isArray(record.changes) || record.changes.length === 0 || !record.changes.every((change) => typeof change === "string" && change.length > 0)) throw new Error("invalid changes");
   if (typeof record.breaking !== "boolean") throw new Error("invalid breaking");
 
   for (const key of ["docsUrl", "sourceUrl", "rfcUrl"] as const) {
