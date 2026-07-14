@@ -46,6 +46,14 @@ export function validateRelease(value: unknown): Release {
 
 export const releases: readonly Release[] = [validateRelease(release)];
 
+export function releaseState(items: readonly Release[]) {
+  const products = items.map((item) => ({
+    ...item,
+    name: item.title.replace(new RegExp(`\\s+${item.version.replaceAll(".", "\\.")}$`), "")
+  }));
+  return { empty: products.length === 0, products };
+}
+
 export function getRelease(product: string, version: string): Release | undefined {
   return releases.find((item) => item.product === product && item.version === version);
 }

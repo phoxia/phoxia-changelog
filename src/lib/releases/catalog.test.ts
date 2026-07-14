@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { getRelease, releases, validateRelease } from "./catalog.ts";
+import { getRelease, releases, releaseState, validateRelease } from "./catalog.ts";
 
 test("rejects a release without evidence", () => {
   assert.throws(() => validateRelease({ product: "kit", version: "1.0.0" }), /title/);
@@ -56,4 +56,12 @@ test("exposes exactly the verified Kit release", () => {
   assert.equal(releases.length, 1);
   assert.equal(getRelease("kit", "1.0.0")?.title, "Phoxia DevKit 1.0.0");
   assert.equal(getRelease("kit", "9.9.9"), undefined);
+});
+
+test("describes an empty catalog without indexing a missing release", () => {
+  assert.deepEqual(releaseState([]), { empty: true, products: [] });
+});
+
+test("derives product labels from release titles", () => {
+  assert.equal(releaseState(releases).products[0]?.name, "Phoxia DevKit");
 });

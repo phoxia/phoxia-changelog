@@ -1,28 +1,43 @@
 <script lang="ts">
-  import Lux from "@phoxia/lux/svelte";
+  import luxHappy from "@phoxia/lux/assets/lux/lux-happy.svg?url";
+  import Monitor from "lucide-svelte/icons/monitor";
   import Moon from "lucide-svelte/icons/moon";
   import Sun from "lucide-svelte/icons/sun";
+  import { onMount } from "svelte";
 
-  let light = $state(false);
+  type Theme = "system" | "light" | "dark";
+  let theme = $state<Theme>("system");
+  let themeOpen = $state(false);
 
-  function toggleTheme() {
-    light = !light;
-    document.documentElement.dataset.theme = light ? "light" : "dark";
+  function applyTheme(value: Theme) {
+    theme = value;
+    localStorage.setItem("phoxia-changelog-theme", value);
+    document.documentElement.dataset.theme = value === "system"
+      ? (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light")
+      : value;
+    themeOpen = false;
   }
+
+  onMount(() => {
+    const stored = localStorage.getItem("phoxia-changelog-theme");
+    applyTheme(stored === "light" || stored === "dark" ? stored : "system");
+    const media = matchMedia("(prefers-color-scheme: dark)");
+    const update = () => theme === "system" && applyTheme("system");
+    media.addEventListener("change", update);
+    return () => media.removeEventListener("change", update);
+  });
 </script>
 
 <header>
   <div class="bar">
     <a class="brand" href="/" aria-label="Phoxia Changelog home">
-      <Lux expression="happy" size={24} />
+      <img src={luxHappy} alt="" width="24" height="24" aria-hidden="true" />
       <strong>Phoxia Changelog</strong>
       <span class="host mono">changelog.phoxia.org</span>
     </a>
     <nav aria-label="Utility">
       <a href="https://docs.phoxia.org">Docs</a>
-      <button aria-label={`Use ${light ? "dark" : "light"} theme`} onclick={toggleTheme}>
-        {#if light}<Moon size={16} />{:else}<Sun size={16} />{/if}
-      </button>
+      <div class="menu"><button aria-label="Theme" aria-expanded={themeOpen} onclick={() => themeOpen = !themeOpen}>{#if theme === "light"}<Sun size={16} />{:else if theme === "dark"}<Moon size={16} />{:else}<Monitor size={16} />{/if}</button>{#if themeOpen}<div class="themes"><button aria-pressed={theme === "system"} onclick={() => applyTheme("system")}><Monitor size={15} />System</button><button aria-pressed={theme === "light"} onclick={() => applyTheme("light")}><Sun size={15} />Light</button><button aria-pressed={theme === "dark"} onclick={() => applyTheme("dark")}><Moon size={15} />Dark</button></div>{/if}</div>
     </nav>
   </div>
 </header>
@@ -36,5 +51,9 @@
   nav { gap: 8px; }
   nav a, button { min-height: 34px; padding: 6px 11px; border: 1px solid var(--border); border-radius: 9px; color: var(--text); background: transparent; font-size: 13px; text-decoration: none; cursor: pointer; }
   nav a:hover, button:hover { border-color: var(--border-strong); }
+  .menu { position: relative; }
+  .themes { position: absolute; top: calc(100% + 8px); right: 0; display: grid; min-width: 130px; padding: 6px; border: 1px solid var(--border); border-radius: 10px; background: var(--surface); box-shadow: 0 12px 30px rgba(0,0,0,.3); }
+  .themes button { gap: 8px; border: 0; }
+  .themes button[aria-pressed="true"] { background: var(--surface2); }
   @media (max-width: 600px) { .host { display: none; } .brand strong { font-size: 14px; } }
 </style>

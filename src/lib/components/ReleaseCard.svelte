@@ -7,8 +7,7 @@
   <span class="dot"></span>
   <div class="card">
     <div class="heading">
-      <a class="title" href={`/${release.product}/releases/${release.version}`}>Phoxia Kit {release.version}</a>
-      <span class="channel mono">stable</span>
+      <a class="title" href={`/${release.product}/releases/${release.version}`}>{release.title}</a>
       <time class="mono" datetime={release.date}>{release.date}</time>
     </div>
     <p>{release.summary}</p>
@@ -31,7 +30,6 @@
   .card { padding: 20px; border: 1px solid var(--border-strong); border-radius: 14px; background: var(--surface); }
   .heading { display: flex; flex-wrap: wrap; align-items: baseline; gap: 10px; margin-bottom: 8px; }
   .title { color: var(--text); font-size: 19px; font-weight: 700; letter-spacing: -0.01em; text-decoration: none; }
-  .channel { padding: 2px 8px; border: 1px solid color-mix(in srgb, #28c840 40%, var(--border)); border-radius: 999px; color: #28c840; font-size: 10px; }
   time { margin-left: auto; color: var(--muted); font-size: 12px; }
   p { max-width: 70ch; margin: 0 0 14px; color: var(--muted); font-size: 14px; }
   dl { display: flex; gap: 20px; margin: 0 0 14px; font-size: 12.5px; }
