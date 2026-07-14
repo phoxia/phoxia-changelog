@@ -131,3 +131,45 @@ test("orders releases newest-first by date then semantic version", () => {
   ];
   assert.deepEqual(sortReleases(items).map(({ version }) => version), ["1.2.0", "1.1.0", "2.0.0"]);
 });
+
+test("accepts a release with tagUrl and translations", () => {
+  const valid = {
+    product: "kit", version: "1.0.0", title: "Kit 1.0", date: "2026-07-13",
+    summary: "Release", changes: ["Added release"], docsUrl: "https://docs.phoxia.org/kit",
+    sourceUrl: "https://github.com/phoxia/phoxia-devkit", breaking: false,
+    tagUrl: "https://github.com/phoxia/phoxia-devkit/releases/tag/v1.0.0",
+    translations: { "pt-BR": { title: "Kit 1.0", summary: "Release em portugues", changes: ["Adicionado release"] } }
+  };
+  assert.doesNotThrow(() => validateRelease(valid));
+});
+
+test("rejects tagUrl with non-HTTPS scheme", () => {
+  const valid = {
+    product: "kit", version: "1.0.0", title: "Kit 1.0", date: "2026-07-13",
+    summary: "Release", changes: ["Added release"], docsUrl: "https://docs.phoxia.org/kit",
+    sourceUrl: "https://github.com/phoxia/phoxia-devkit", breaking: false
+  };
+  assert.throws(() => validateRelease({ ...valid, tagUrl: "http://github.com/phoxia/phoxia-devkit/releases/tag/v1.0.0" }), /tagUrl/);
+});
+
+test("rejects blank or invalid translation fields", () => {
+  const valid = {
+    product: "kit", version: "1.0.0", title: "Kit 1.0", date: "2026-07-13",
+    summary: "Release", changes: ["Added release"], docsUrl: "https://docs.phoxia.org/kit",
+    sourceUrl: "https://github.com/phoxia/phoxia-devkit", breaking: false
+  };
+  assert.throws(() => validateRelease({ ...valid, translations: { "pt-BR": { summary: "" } } }), /translations/);
+  assert.throws(() => validateRelease({ ...valid, translations: { "pt-BR": { changes: [] } } }), /translations/);
+  assert.throws(() => validateRelease({ ...valid, translations: { "pt-BR": { changes: [" "] } } }), /translations/);
+  assert.throws(() => validateRelease({ ...valid, translations: { "pt-BR": { title: "  " } } }), /translations/);
+});
+
+test("rejects invalid locale codes in translations", () => {
+  const valid = {
+    product: "kit", version: "1.0.0", title: "Kit 1.0", date: "2026-07-13",
+    summary: "Release", changes: ["Added release"], docsUrl: "https://docs.phoxia.org/kit",
+    sourceUrl: "https://github.com/phoxia/phoxia-devkit", breaking: false
+  };
+  assert.throws(() => validateRelease({ ...valid, translations: { "pt_BR": { title: "X" } } }), /bad locale/);
+  assert.throws(() => validateRelease({ ...valid, translations: { "123": { title: "X" } } }), /bad locale/);
+});

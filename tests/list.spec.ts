@@ -27,11 +27,11 @@ test("built pages contain deployable Lux and metadata assets", async ({ page }) 
   for (const icon of webManifest.icons) expect((await page.request.get(new URL(icon.src, response.url()).toString())).ok()).toBe(true);
 });
 
-test("localized list shells are prerendered", async ({ page }) => {
+test("localized list shells are prerendered with translations", async ({ page }) => {
   for (const path of ["/pt-BR", "/pt-BR/kit"]) {
     await page.goto(path);
     await expect(page.locator("html")).toHaveAttribute("lang", "pt-BR");
-    await expect(page.getByRole("status")).toContainText("inglês");
+    await expect(page.getByRole("status")).toHaveCount(0);
   }
 });
 

@@ -12,7 +12,22 @@
     "Added authoritative installation with backup and restore.",
     "Added project governance, licensing, documentation and release workflows."
   ],
-  "docsUrl": "https://docs.phoxia.org/kit",
+  "docsUrl": "https://docs.phoxia.org/kit/1.0.0",
   "sourceUrl": "https://github.com/phoxia/phoxia-devkit",
-  "breaking": false
+  "breaking": false,
+  "tagUrl": "https://github.com/phoxia/phoxia-devkit/releases/tag/v1.0.0",
+  "translations": {
+    "pt-BR": {
+      "title": "Phoxia DevKit 1.0.0",
+      "summary": "Um kit de desenvolvimento e governanca de software multi-perfil para Claude Code e Codex.",
+      "changes": [
+        "Adicionados perfis Personal, Work, Phoxia e Specialist para Claude Code e Codex.",
+        "Adicionada inicializacao deterministica de usuario, workspace e projeto.",
+        "Adicionadas skills global-first com fallback local portatil.",
+        "Adicionado contexto de projeto gerenciado, sincronizacao de projeto e verificacoes de integridade somente leitura.",
+        "Adicionada instalacao autoritativa com backup e restauracao.",
+        "Adicionados fluxos de governanca de projeto, licenciamento, documentacao e release."
+      ]
+    }
+  }
 }

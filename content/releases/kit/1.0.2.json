@@ -18,7 +18,28 @@
     "Replaced the compact footer with a rich local sitemap.",
     "Added effective bilingual Kit privacy and terms pages."
   ],
-  "docsUrl": "https://docs.phoxia.org/kit",
+  "docsUrl": "https://docs.phoxia.org/kit/1.0.2",
   "sourceUrl": "https://github.com/phoxia/phoxia-devkit",
-  "breaking": false
+  "breaking": false,
+  "tagUrl": "https://github.com/phoxia/phoxia-devkit/releases/tag/v1.0.2",
+  "translations": {
+    "pt-BR": {
+      "title": "Phoxia DevKit 1.0.2",
+      "summary": "Scripts de release npm, verificacoes de integridade de manifesto e uma experiencia de landing do Kit refinada com paginas legais bilinques.",
+      "changes": [
+        "Adicionados scripts npm para bump de versao, regeneracao de manifesto e fluxo de release.",
+        "Simplificada a navegacao do Kit e substituidos menus select por controles acessiveis de idioma e tema.",
+        "Adicionada animacao intencional de terminal e secoes com suporte a reduced-motion.",
+        "Expandido o footer do site com recursos de documentacao, suporte, seguranca e projeto.",
+        "Alinhados os controles compactos de idioma e tema Phoxia, integrado Lux ao titulo do problema e corrigida a mensagem de produto do footer.",
+        "Consolidada a landing do Kit em um pipeline de produto de oito secoes.",
+        "Adicionada uma linha do tempo de workflow responsiva e acessivel com fallback para reduced-motion.",
+        "Focada a secao de perfis nos presets oficiais e fluxos de trabalho locais.",
+        "Progresso do workflow codificado por cores de amber a violet.",
+        "Adicionados icones semanticos e espacamento consistente de titulos nos cards de pipeline, repositorio, verificacao, modo de configuracao e perfis.",
+        "Substituido o footer compacto por um sitemap local rico.",
+        "Adicionadas paginas bilinques efetivas de privacidade e termos do Kit."
+      ]
+    }
+  }
 }

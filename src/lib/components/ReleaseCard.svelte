@@ -2,25 +2,31 @@
   import type { Release } from "$lib/releases/types";
   let { release, locale = "" }: { release: Release; locale?: string } = $props();
   const detailUrl = $derived(`${locale}/${release.product}/releases/${release.version}`);
+  const localeCode = $derived(locale.replace(/^\//, ""));
+  const t = $derived(localeCode ? release.translations?.[localeCode] : undefined);
+  const title = $derived(t?.title ?? release.title);
+  const summary = $derived(t?.summary ?? release.summary);
+  const isPtBR = $derived(locale === "/pt-BR");
 </script>
 
 <article>
   <span class="dot"></span>
   <div class="card">
     <div class="heading">
-      <a class="title" href={detailUrl}>{release.title}</a>
+      <a class="title" href={detailUrl}>{title}</a>
       <time class="mono" datetime={release.date}>{release.date}</time>
     </div>
-    <p>{release.summary}</p>
+    <p>{summary}</p>
     <dl>
-      <div><dt class="mono">BREAKING</dt><dd class:no={release.breaking === false}>{release.breaking ? "Yes" : "None"}</dd></div>
-      {#if release.migration}<div><dt class="mono">MIGRATION</dt><dd>{release.migration}</dd></div>{/if}
-      {#if release.compatibility}<div><dt class="mono">COMPATIBILITY</dt><dd>{release.compatibility}</dd></div>{/if}
+      <div><dt class="mono">{isPtBR ? "QUEBRA" : "BREAKING"}</dt><dd class:no={release.breaking === false}>{release.breaking ? (isPtBR ? "Sim" : "Yes") : (isPtBR ? "Nenhuma" : "None")}</dd></div>
+      {#if release.migration}<div><dt class="mono">{isPtBR ? "MIGRACAO" : "MIGRATION"}</dt><dd>{t?.migration ?? release.migration}</dd></div>{/if}
+      {#if release.compatibility}<div><dt class="mono">{isPtBR ? "COMPATIBILIDADE" : "COMPATIBILITY"}</dt><dd>{t?.compatibility ?? release.compatibility}</dd></div>{/if}
     </dl>
     <div class="links">
-      <a class="detail" href={detailUrl}>Release detail →</a>
-      <a href={release.docsUrl}>Docs</a>
-      <a href={release.sourceUrl}>Source</a>
+      <a class="detail" href={detailUrl}>{isPtBR ? "Detalhes →" : "Release detail →"}</a>
+      <a href={release.docsUrl}>{isPtBR ? "Docs" : "Docs"}</a>
+      <a href={release.sourceUrl}>{isPtBR ? "Fonte" : "Source"}</a>
+      {#if release.tagUrl}<a href={release.tagUrl}>{isPtBR ? "Tag" : "Release tag"}</a>{/if}
     </div>
   </div>
 </article>

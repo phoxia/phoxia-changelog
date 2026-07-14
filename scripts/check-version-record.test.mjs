@@ -25,7 +25,7 @@ test("rejects a record for another product or malformed manifest", () => {
 test("uses the canonical release validation contract", () => {
   const valid = {
     product: "kit", version: "1.0.0", title: "Kit 1.0.0", date: "2026-07-13",
-    summary: "Release", changes: ["Added release"], docsUrl: "https://docs.phoxia.org/kit",
+    summary: "Release", changes: ["Added release"], docsUrl: "https://docs.phoxia.org/kit/1.0.0",
     sourceUrl: "https://github.com/phoxia/phoxia-devkit", breaking: false
   };
 

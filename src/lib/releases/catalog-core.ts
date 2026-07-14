@@ -1,7 +1,7 @@
 import type { Release } from "./types.ts";
 
 const required = ["product", "version", "title", "date", "summary", "changes", "docsUrl", "sourceUrl", "breaking"] as const;
-const allowed = new Set([...required, "compatibility", "migration", "rfcUrl"]);
+const allowed = new Set([...required, "compatibility", "migration", "rfcUrl", "translations", "tagUrl"]);
 const semver = /^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[A-Za-z-][0-9A-Za-z-]*)(?:\.(?:0|[1-9]\d*|\d*[A-Za-z-][0-9A-Za-z-]*))*))?(?:\+([0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*))?$/;
 
 function isHttpsUrl(value: unknown): value is string {
@@ -27,9 +27,23 @@ export function validateRelease(value: unknown): Release {
   if (typeof record.date !== "string" || !/^\d{4}-\d{2}-\d{2}$/.test(record.date) || new Date(`${record.date}T00:00:00Z`).toISOString().slice(0, 10) !== record.date) throw new Error("invalid date");
   if (!Array.isArray(record.changes) || record.changes.length === 0 || !record.changes.every((change) => typeof change === "string" && change.length > 0 && change.trim() === change)) throw new Error("invalid changes");
   if (typeof record.breaking !== "boolean") throw new Error("invalid breaking");
-  for (const key of ["docsUrl", "sourceUrl", "rfcUrl"] as const) if (record[key] !== undefined && !isHttpsUrl(record[key])) throw new Error(`unexpected ${key}`);
+  for (const key of ["docsUrl", "sourceUrl", "rfcUrl", "tagUrl"] as const) if (record[key] !== undefined && !isHttpsUrl(record[key])) throw new Error(`unexpected ${key}`);
   for (const key of ["compatibility", "migration"] as const) {
     if (record[key] !== undefined && (typeof record[key] !== "string" || record[key].length === 0 || record[key].trim() !== record[key])) throw new Error(`invalid ${key}`);
+  }
+  if (record.translations !== undefined) {
+    if (typeof record.translations !== "object" || record.translations === null || Array.isArray(record.translations)) throw new Error("invalid translations");
+    const localePattern = /^[a-z]{2,3}(-[A-Z][a-z]{3})?(-[A-Z]{2})?$/;
+    for (const [locale, t] of Object.entries(record.translations as Record<string, Record<string, unknown>>)) {
+      if (!localePattern.test(locale)) throw new Error(`invalid translations: bad locale ${locale}`);
+      if (!t || typeof t !== "object" || Array.isArray(t)) throw new Error(`invalid translations: ${locale} must be an object`);
+      for (const key of ["title", "summary", "compatibility", "migration"] as const) {
+        if (t[key] !== undefined && (typeof t[key] !== "string" || t[key].length === 0 || (t[key] as string).trim() !== t[key])) throw new Error(`invalid translations: ${locale}.${key}`);
+      }
+      if (t.changes !== undefined) {
+        if (!Array.isArray(t.changes) || t.changes.length === 0 || !t.changes.every((c: unknown) => typeof c === "string" && c.length > 0 && c.trim() === c)) throw new Error(`invalid translations: ${locale}.changes`);
+      }
+    }
   }
   return record as unknown as Release;
 }

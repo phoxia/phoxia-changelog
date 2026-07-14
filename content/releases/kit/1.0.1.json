@@ -9,7 +9,19 @@
     "Added explicit Feature Record, ADR and RFC classification guidance to initialized projects.",
     "Added regression coverage for the managed documentation policy."
   ],
-  "docsUrl": "https://docs.phoxia.org/kit",
+  "docsUrl": "https://docs.phoxia.org/kit/1.0.1",
   "sourceUrl": "https://github.com/phoxia/phoxia-devkit",
-  "breaking": false
+  "breaking": false,
+  "tagUrl": "https://github.com/phoxia/phoxia-devkit/releases/tag/v1.0.1",
+  "translations": {
+    "pt-BR": {
+      "title": "Phoxia DevKit 1.0.1",
+      "summary": "Governanca de documentacao agora faz parte de cada projeto Phoxia gerenciado.",
+      "changes": [
+        "Adicionados gatilhos de documentacao gerenciada para versao publica, mudancas de comportamento voltadas ao usuario e alteracoes de contrato.",
+        "Adicionada orientacao explicita de classificacao de Feature Record, ADR e RFC para projetos inicializados.",
+        "Adicionada cobertura de regressao para a politica de documentacao gerenciada."
+      ]
+    }
+  }
 }

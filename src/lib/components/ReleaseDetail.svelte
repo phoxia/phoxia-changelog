@@ -2,42 +2,51 @@
   import type { Release } from "$lib/releases/types";
 
   let { release, fallback = false, locale = "" }: { release: Release; fallback?: boolean; locale?: string } = $props();
+  const localeCode = $derived(locale.replace(/^\//, ""));
+  const t = $derived(localeCode ? release.translations?.[localeCode] : undefined);
+  const title = $derived(t?.title ?? release.title);
+  const summary = $derived(t?.summary ?? release.summary);
+  const changes = $derived(t?.changes ?? release.changes);
+  const migration = $derived(t?.migration ?? release.migration);
+  const compatibility = $derived(t?.compatibility ?? release.compatibility);
+  const isPtBR = $derived(locale === "/pt-BR");
 </script>
 
 <svelte:head>
-  <title>Phoxia • {release.title}</title>
-  <meta name="description" content={release.summary} />
+  <title>Phoxia • {title}</title>
+  <meta name="description" content={summary} />
 </svelte:head>
 
 <main id="main" class="shell detail">
-  {#if fallback}<p class="notice" role="status">This release is not available in Brazilian Portuguese yet. Showing the English version.</p>{/if}
+  {#if fallback && !t?.title}<p class="notice" role="status">This release is not available in Brazilian Portuguese yet. Showing the English version.</p>{/if}
   <nav class="crumbs mono" aria-label="Breadcrumb">
-    <a href={locale || "/"}>All products</a><span>/</span><a href={`${locale}/${release.product}`}>Kit</a><span>/</span><span>v{release.version}</span>
+    <a href={locale || "/"}>{isPtBR ? "Todos os produtos" : "All products"}</a><span>/</span><a href={`${locale}/${release.product}`}>Kit</a><span>/</span><span>v{release.version}</span>
   </nav>
   <header class="release-head">
-    <div><h1>{release.title}</h1><p>{release.summary}</p></div>
-    <time class="mono" datetime={release.date}>Released {release.date}</time>
+    <div><h1>{title}</h1><p>{summary}</p></div>
+    <time class="mono" datetime={release.date}>{isPtBR ? "Lançado em" : "Released"} {release.date}</time>
   </header>
 
   <div class="content">
     <section>
-      <h2 class="mono">Changes</h2>
-      <ul>{#each release.changes as change}<li><span aria-hidden="true">+</span>{change}</li>{/each}</ul>
+      <h2 class="mono">{isPtBR ? "Alteracoes" : "Changes"}</h2>
+      <ul>{#each changes as change}<li><span aria-hidden="true">+</span>{change}</li>{/each}</ul>
 
-      {#if release.migration}
-        <div class="panel"><h2 class="mono">Migration</h2><p>{release.migration}</p></div>
+      {#if migration}
+        <div class="panel"><h2 class="mono">{isPtBR ? "Migracao" : "Migration"}</h2><p>{migration}</p></div>
       {/if}
     </section>
 
     <aside>
-      {#if release.compatibility}
-        <section class="panel"><h2 class="mono">Compatibility</h2><p>{release.compatibility}</p></section>
+      {#if compatibility}
+        <section class="panel"><h2 class="mono">{isPtBR ? "Compatibilidade" : "Compatibility"}</h2><p>{compatibility}</p></section>
       {/if}
       <section class="panel related">
-        <h2 class="mono">Related</h2>
+        <h2 class="mono">{isPtBR ? "Relacionado" : "Related"}</h2>
         {#if release.rfcUrl}<a href={release.rfcUrl}>RFC</a>{/if}
-        <a href={release.docsUrl}>Documentation</a>
-        <a href={release.sourceUrl}>Source release</a>
+        <a href={release.docsUrl}>{isPtBR ? "Documentacao" : "Documentation"}</a>
+        <a href={release.sourceUrl}>{isPtBR ? "Fonte" : "Source release"}</a>
+        {#if release.tagUrl}<a href={release.tagUrl}>{isPtBR ? "Tag da release" : "Release tag"}</a>{/if}
       </section>
     </aside>
   </div>
