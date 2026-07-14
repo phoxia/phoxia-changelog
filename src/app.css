@@ -1,0 +1,77 @@
+@import url("https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap");
+
+:root {
+  font-family: "Geist", "Inter", system-ui, sans-serif;
+  color-scheme: dark;
+  --bg: #050508;
+  --surface: #0d0d14;
+  --surface2: #13131e;
+  --border: rgba(240, 238, 230, 0.09);
+  --border-strong: rgba(240, 238, 230, 0.16);
+  --text: #f0eee6;
+  --muted: #8a8780;
+  --amber: #f59e0b;
+  --violet: #8b5cf6;
+  background: var(--bg);
+  color: var(--text);
+  font-synthesis: none;
+}
+
+:root[data-theme="light"] {
+  color-scheme: light;
+  --bg: #f0eee6;
+  --surface: #fff;
+  --surface2: #f6f4ec;
+  --border: rgba(5, 5, 8, 0.1);
+  --border-strong: rgba(5, 5, 8, 0.18);
+  --text: #13131e;
+  --muted: #6b6862;
+  --amber: #b45309;
+  --violet: #6d28d9;
+}
+
+* { box-sizing: border-box; }
+html { min-height: 100%; background: var(--bg); scroll-behavior: smooth; }
+body { min-width: 320px; min-height: 100vh; margin: 0; background: var(--bg); color: var(--text); line-height: 1.6; -webkit-font-smoothing: antialiased; }
+button, input { font: inherit; }
+a:focus-visible, button:focus-visible, input:focus-visible { outline: 2px solid var(--amber); outline-offset: 2px; border-radius: 8px; }
+.skip-link { position: fixed; top: 8px; left: 8px; z-index: 100; padding: 8px 12px; color: var(--bg); background: var(--amber); transform: translateY(-150%); }
+.skip-link:focus { transform: none; }
+.shell { max-width: 1080px; margin-inline: auto; padding-inline: clamp(18px, 4vw, 44px); }
+.mono { font-family: "JetBrains Mono", monospace; }
+.hero { padding-top: clamp(32px, 6vw, 60px); padding-bottom: clamp(18px, 2vw, 26px); }
+.back { display: inline-flex; margin-bottom: 14px; color: var(--muted); font-size: 12.5px; text-decoration: none; }
+.hero-row { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; }
+.eyebrow { margin-bottom: 10px; color: var(--muted); font-size: 12px; }
+h1 { margin: 0 0 10px; font-size: clamp(30px, 4.2vw, 48px); line-height: 1.08; letter-spacing: -0.026em; }
+.lead { max-width: 600px; margin: 0; color: var(--muted); font-size: 17px; }
+.search { display: flex; align-items: center; gap: 12px; max-width: 520px; margin-top: 22px; padding: 11px 14px; border: 1px solid var(--border-strong); border-radius: 12px; background: var(--surface); }
+.search svg { color: var(--muted); }
+.search input { width: 100%; border: 0; outline: 0; color: var(--text); background: transparent; font-size: 14px; }
+.search input::placeholder { color: var(--muted); }
+.products { padding-top: clamp(20px, 3vw, 32px); padding-bottom: clamp(12px, 2vw, 20px); }
+.section-label { margin-bottom: 12px; color: var(--muted); font-size: 11px; letter-spacing: 0.05em; text-transform: uppercase; }
+.product { padding: 16px 18px; border: 1px solid var(--border-strong); border-radius: 13px; background: var(--surface); }
+.product-head, .product-meta { display: flex; align-items: center; gap: 12px; }
+.product-head { justify-content: space-between; margin-bottom: 10px; }
+.product-name { font-size: 15px; font-weight: 600; }
+.version { padding: 3px 8px; border: 1px solid var(--border); border-radius: 6px; background: var(--surface2); color: var(--text); font-size: 12px; }
+.date { color: var(--muted); font-size: 12px; }
+.product-link { margin-left: auto; color: var(--amber); font-size: 12.5px; text-decoration: none; }
+.filters { padding-top: clamp(12px, 2vw, 20px); padding-bottom: 14px; }
+.filter { display: inline-flex; align-items: center; gap: 7px; padding: 5px 11px; border-radius: 999px; background: var(--amber); color: var(--bg); font-size: 12.5px; font-weight: 600; }
+.timeline { padding-top: clamp(16px, 2vw, 24px); padding-bottom: clamp(56px, 8vw, 90px); }
+.rail { position: relative; padding-left: 46px; }
+.rail::before { position: absolute; top: 8px; bottom: 0; left: 9px; width: 2px; background: var(--border); content: ""; }
+.archive { margin: 8px 0 0 4px; color: var(--muted); font-size: 11.5px; }
+
+@media (max-width: 600px) {
+  .lead { font-size: 15px; }
+  .rail { padding-left: 28px; }
+  .rail::before { left: 6px; }
+  .product-meta { flex-wrap: wrap; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { scroll-behavior: auto !important; animation: none !important; transition: none !important; }
+}
