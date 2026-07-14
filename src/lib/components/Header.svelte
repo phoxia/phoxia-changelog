@@ -37,7 +37,23 @@
     const media = matchMedia("(prefers-color-scheme: dark)");
     const update = () => theme === "system" && applyTheme("system");
     media.addEventListener("change", update);
-    return () => media.removeEventListener("change", update);
+
+    function closeMenus(e: MouseEvent) {
+      if (!(e.target as HTMLElement)?.closest(".menu")) {
+        themeOpen = false;
+        langOpen = false;
+      }
+    }
+    function onKeydown(e: KeyboardEvent) {
+      if (e.key === "Escape") { themeOpen = false; langOpen = false; }
+    }
+    document.addEventListener("click", closeMenus);
+    document.addEventListener("keydown", onKeydown);
+    return () => {
+      media.removeEventListener("change", update);
+      document.removeEventListener("click", closeMenus);
+      document.removeEventListener("keydown", onKeydown);
+    };
   });
 </script>
 
