@@ -1,0 +1,18 @@
+{
+  "product": "kit",
+  "version": "1.0.0",
+  "title": "Phoxia DevKit 1.0.0",
+  "date": "2026-07-13",
+  "summary": "A multi-profile development and software-governance kit for Claude Code and Codex.",
+  "changes": [
+    "Added Personal, Work, Phoxia and Specialist profiles for Claude Code and Codex.",
+    "Added deterministic user, workspace and project initialization.",
+    "Added global-first skills with portable local fallback.",
+    "Added managed project context, project synchronization and read-only health checks.",
+    "Added authoritative installation with backup and restore.",
+    "Added project governance, licensing, documentation and release workflows."
+  ],
+  "docsUrl": "https://docs.phoxia.org/kit",
+  "sourceUrl": "https://github.com/phoxia/phoxia-devkit",
+  "breaking": false
+}
